@@ -1,0 +1,29 @@
+{% extends 'hobbie/base.html' %}
+
+{% block title %}
+    тут могла быть ваша реклама
+{% endblock %}
+
+{% block content %}
+        <div class="tasks">
+        {% for t in tasks %}
+            <div class="col-md-4">
+              <p>{{ t.title }}</p>
+              <p>{{ t.text }}</p>
+            </div>
+        {% endfor %}
+        </div>
+{% endblock %}
+
+<p id="colo">
+    <span id="ttt"></span>
+</p>
+
+
+<script type="text/javascript">
+    $(document).mousemove(function(e){
+         var clientCoords = (e.pageX + e.pageY)/8;
+        $('#ttt').text('000' + clientCoords.toString(16));
+        $('#colo').css( "background" , ('#' +clientCoords.toString(16) + clientCoords.toString(16)));
+    })
+</script>
