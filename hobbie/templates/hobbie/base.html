@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.css' %}" />
     <script src="{% static 'bootstrap.js' %}"></script>
     <script src="{% static 'jquery3.js' %}"></script>
+
     <meta charset="UTF-8">
 </head>
 
@@ -16,16 +17,7 @@
     {% block content %}
     {% endblock %}
 </body>
-<p id="colo">
-    <span id="ttt"></span>
-</p>
 
-<script type="text/javascript">
-    $(document).mousemove(function(e){
-         var clientCoords = (e.pageX + e.pageY)/8;
-        $('#ttt').text('000' + clientCoords.toString(16));
-        $('#colo').css( "background" , ('#' +clientCoords.toString(16) + clientCoords.toString(16)));
-    })
-</script>
 
 </html>
+

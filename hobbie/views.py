@@ -9,3 +9,7 @@ def home(request):
         'tasks': tasks,
     }
     return render(request, 'hobbie/index.html', context)
+
+
+def mymap(request):
+    return render(request, 'hobbie/mao.html')
