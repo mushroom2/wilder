@@ -5,16 +5,97 @@
 {% endblock %}
 
 {% block content %}
-    <div id="map"></div>
+    <div class="row">
+    <div class="col-md-2 geonavcont">
+        <button id="banderstadt" class="btn btn-primary">Lemberg</button>
+        <p>
+            <input type="checkbox" id="makemultiline">Draw Track
+        </p>
+        <button id="savetrack" class="btn btn-primary">Save Track</button>
+    </div>
+    <div class="col-md-12" id="map"></div>
+    </div>
+
     <script>
     // GOOGLE DIRECION API KEY AIzaSyD7biSf5Aa5lUFmoDX2nYu8eGbsuzB1bY8
-
+    // https://lh3.googleusercontent.com/kSr5aWqIoKYkBTvRVGzjdmbMuUcsRY3lG0JyYCHXWeOPyjfAbzT0sYZUAecrpUbhtNOL13w4m95pE6w=w1920-h922
+    // marker icon url https://drive.google.com/file/d/0B-TBnxQ1BvJtOXItel9PU2FIbWc
+      //$('#makemultiline').bootstrapSwitch();
       var map;
+      var c = 0;
+      var multilinestore = [];
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 49.00, lng: 32.00},
-          zoom: 7
+          zoom: 6
         });
+
+
+      function addMarker(){
+         var getCoordsOnClick = google.maps.event.addListener(map, "click", function(event) {
+                  var lat = event.latLng.lat();
+                  var lng = event.latLng.lng();
+                  multilinestore.unshift({lat:lat, lng:lng});
+                  c = c + 1;
+                  new google.maps.Marker({
+                       position: {lat: lat, lng: lng},
+                       map: map,
+                       animation: google.maps.Animation.DROP,
+                       title: ''+c
+                    });
+                  if (multilinestore.length > 1) {
+                  var myTrack = new google.maps.Polyline({
+                    path: multilinestore,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                  });
+                  myTrack.setMap(map);
+
+
+                  }
+                 //alert(lat + ' ' + lng)
+              });
+
+      }
+
+      $('#makemultiline').click(function(){
+          if ($("#makemultiline").is(':checked') === true) {
+              addMarker()
+          } else {
+              c = 0;
+              multilinestore = [];
+              google.maps.event.clearListeners(map, 'click');
+          }
+      });
+
+      $('#banderstadt').click(function(){
+           var marker = null;
+           marker = new google.maps.Marker({
+           position: {lat: 49.841, lng: 24.031},
+           map: map,
+           animation: google.maps.Animation.DROP,
+           title: 'Bamderstadt'
+        });
+        map.setCenter({lat: 49.833, lng: 24.00});
+        map.setZoomFactor(8)
+
+      });
+
+      $('#savetrack').click(function(){
+          $.ajax({
+              url: '{% url 'savetrack' %}',
+              type: 'POST',
+              data: JSON.stringify({"track": multilinestore, "user": "{{ user }}"}),
+              contentType: 'application/json; charset=utf-8',
+              dataType: 'json',
+              success: function(result){console.log(result)},
+              error: function(res){console.log(res)}
+          });
+          //$.post('{% url 'savetrack' %}', {"track": multilinestore})
+      })
+
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2b_w5xsmtLBqr5Rpm1o9mGIZclhYo-Tc&callback=initMap" async defer></script>

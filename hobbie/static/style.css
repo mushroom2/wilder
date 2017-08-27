@@ -6,7 +6,16 @@
 }
 
 #map {
-    height: 80%;
+    height: 700px;
+    width: 1200px;
+}
+
+.geonavcont{
+    background-color: #cfcfcf;
+}
+
+#banderstadt, #makemultiline, #savetrack{
+    margin: 10px;
 }
 
 html, body {
@@ -14,3 +23,5 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+

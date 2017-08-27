@@ -17,3 +17,9 @@ class Card(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class MyTrack(models.Model):
+    username = models.CharField(max_length=64)
+    track = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
