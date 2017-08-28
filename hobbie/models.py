@@ -20,6 +20,11 @@ class Card(models.Model):
 
 
 class MyTrack(models.Model):
+    id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=64)
     track = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
+    trackname = models.CharField(max_length=256, default='no name')
+
+    def __str__(self):
+        return self.trackname

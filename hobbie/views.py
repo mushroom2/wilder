@@ -26,6 +26,13 @@ def savetrack(request):
             mt = MyTrack()
             mt.username = trackdata['user']
             mt.track = json.dumps(trackdata['track'])
+            mt.trackname = trackdata['name']
             mt.save()
             print('saved!')
     return HttpResponse("OK")
+
+
+def gettrack(request):
+    user = request.user
+    tracks = MyTrack.objects.filter(username=user).order_by("created_date")
+    return render(request, 'hobbie/gettrack.html', {'tracks': tracks})

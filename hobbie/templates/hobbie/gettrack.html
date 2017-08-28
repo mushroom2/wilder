@@ -1,26 +1,24 @@
 {% extends 'hobbie/base.html' %}
 
 {% block title %}
-    карта
+    мои маршуты
 {% endblock %}
 
 {% block content %}
     <div class="row">
     <div class="col-md-2 geonavcont">
-        <button id="banderstadt" class="btn btn-primary">Lemberg</button>
-        <p>
-            <input type="checkbox" id="makemultiline">Draw Track
-        </p>
-        <button id="savetrack" class="btn btn-primary">Save Track</button>
-        <div id="traknamecont">
-            <label for="trackname">Track Name</label>
-            <input type="text" id="trackname">
-        </div>
+    <select id="selecttrack">
+    {% for elem in tracks %}
+        <option value="{{ elem.track }}">{{ elem.trackname }}</option>
+    {% endfor %}
+    </select>
+    <span class="btn btn-xs btn-default" id="gettrackbtn">Show on map!</span>
     </div>
     <div class="col-md-12" id="map"></div>
     </div>
-
+{
     <script>
+
     // GOOGLE DIRECION API KEY AIzaSyD7biSf5Aa5lUFmoDX2nYu8eGbsuzB1bY8
     // https://lh3.googleusercontent.com/kSr5aWqIoKYkBTvRVGzjdmbMuUcsRY3lG0JyYCHXWeOPyjfAbzT0sYZUAecrpUbhtNOL13w4m95pE6w=w1920-h922
     // marker icon url https://drive.google.com/file/d/0B-TBnxQ1BvJtOXItel9PU2FIbWc
@@ -33,6 +31,19 @@
           center: {lat: 49.00, lng: 32.00},
           zoom: 6
         });
+
+      $('#gettrackbtn').click(function(){
+          multilinestore = JSON.parse($('#selecttrack').val());
+         //
+          var myTrack = new google.maps.Polyline({
+                    path: multilinestore,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                  });
+          myTrack.setMap(map);
+      });
 
 
       function addMarker(){
@@ -63,7 +74,7 @@
               });
 
       }
-
+/*
       $('#makemultiline').click(function(){
           if ($("#makemultiline").is(':checked') === true) {
               $('#traknamecont').show();
@@ -102,7 +113,7 @@
           });
           //$.post('{% url 'savetrack' %}', {"track": multilinestore})
       })
-
+*/
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2b_w5xsmtLBqr5Rpm1o9mGIZclhYo-Tc&callback=initMap" async defer></script>
