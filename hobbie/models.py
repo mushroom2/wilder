@@ -25,6 +25,7 @@ class MyTrack(models.Model):
     track = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     trackname = models.CharField(max_length=256, default='no name')
+    description = models.TextField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.trackname

@@ -27,6 +27,7 @@ def savetrack(request):
             mt.username = trackdata['user']
             mt.track = json.dumps(trackdata['track'])
             mt.trackname = trackdata['name']
+            mt.description = trackdata['description']
             mt.save()
             print('saved!')
     return HttpResponse("OK")

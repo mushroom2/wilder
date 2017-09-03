@@ -9,13 +9,17 @@
     <div class="col-md-2 geonavcont">
         <button id="banderstadt" class="btn btn-primary">Lemberg</button>
         <p>
-            <input type="checkbox" id="makemultiline">Draw Track
+            <input type="checkbox" id="makemultiline">Drawing track mode
         </p>
-        <button id="savetrack" class="btn btn-primary">Save Track</button>
         <div id="traknamecont">
             <label for="trackname">Track Name</label>
             <input type="text" id="trackname">
         </div>
+        <div id="desccont" class="form-group">
+            <label for="treckdesc" >Description</label>
+            <textarea id="treckdesc" rows="5" class="form-control"></textarea>
+        </div>
+        <button id="savetrack" class="btn btn-primary">Save Track</button>
     </div>
     <div class="col-md-12" id="map"></div>
     </div>
@@ -64,12 +68,17 @@
 
       }
 
+
       $('#makemultiline').click(function(){
           if ($("#makemultiline").is(':checked') === true) {
               $('#traknamecont').show();
+              $('#desccont').show();
+              $('#savetrack').show();
               addMarker()
           } else {
               $('#traknamecont').hide();
+              $('#desccont').hide();
+              $('#savetrack').hide();
               c = 0;
               multilinestore = [];
               google.maps.event.clearListeners(map, 'click');
@@ -85,16 +94,16 @@
            title: 'Bamderstadt'
         });
         map.setCenter({lat: 49.833, lng: 24.00});
-        map.setZoomFactor(8)
+        map.setZoom(9)
 
       });
 
       $('#savetrack').click(function(){
-
+          console.log(JSON.stringify({"track": multilinestore, "user": "{{ user }}", "name": $('#trackname').val(), "description": $('#treckdesc').val()}));
           $.ajax({
               url: '{% url 'savetrack' %}',
               type: 'POST',
-              data: JSON.stringify({"track": multilinestore, "user": "{{ user }}", "name": $('#trackname').val()}),
+              data: JSON.stringify({"track": multilinestore, "user": "{{ user }}", "name": $('#trackname').val(), "description": $('#treckdesc').val()}),
               contentType: 'application/json; charset=utf-8',
               dataType: 'json',
               success: function(result){console.log(result)},

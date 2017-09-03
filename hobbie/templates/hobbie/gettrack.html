@@ -7,15 +7,19 @@
 {% block content %}
     <div class="row">
     <div class="col-md-2 geonavcont">
-    <select id="selecttrack">
+    <select id="selecttrack" class="form-control">
     {% for elem in tracks %}
-        <option value="{{ elem.track }}">{{ elem.trackname }}</option>
+        <option value="{{ elem.track }}" id="track-{{ elem.id }}">{{ elem.trackname }}</option>
     {% endfor %}
     </select>
     <span class="btn btn-xs btn-default" id="gettrackbtn">Show on map!</span>
+    <p>
+    <span id="descoutput" ></span>
+    </p>
     </div>
     <div class="col-md-12" id="map"></div>
     </div>
+
 {
     <script>
 
@@ -26,6 +30,7 @@
       var map;
       var c = 0;
       var multilinestore = [];
+      var trackstore = [];
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 49.00, lng: 32.00},
@@ -34,7 +39,18 @@
 
       $('#gettrackbtn').click(function(){
           multilinestore = JSON.parse($('#selecttrack').val());
-         //
+          var middlelat = 0;
+          var middlelng = 0;
+          //var targetid = +$('selecttrack').attr('id').split('-')[1];
+          if (trackstore.length > 0) {
+              trackstore.pop().setMap(null);
+          }
+          map.setZoom(9);
+          for (var i=0;  i < multilinestore.length; i++) {
+              middlelat += multilinestore[i].lat;
+              middlelng += multilinestore[i].lng;
+          }
+          map.setCenter({lat: middlelat/multilinestore.length, lng: middlelng/multilinestore.length});
           var myTrack = new google.maps.Polyline({
                     path: multilinestore,
                     geodesic: true,
@@ -43,6 +59,9 @@
                     strokeWeight: 2
                   });
           myTrack.setMap(map);
+          trackstore.push(myTrack)
+
+
       });
 
 

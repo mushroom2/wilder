@@ -14,7 +14,7 @@
     background-color: #cfcfcf;
 }
 
-#banderstadt, #makemultiline, #savetrack, #traknamecont{
+#banderstadt, #makemultiline, #savetrack, #traknamecont, {
     margin: 10px;
 }
 
@@ -24,7 +24,7 @@ html, body {
   padding: 0;
 }
 
-#traknamecont{
+#traknamecont, #desccont, #savetrack{
     display: none;
 }
 
