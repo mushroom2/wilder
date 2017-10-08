@@ -1,0 +1,87 @@
+{% extends 'hobbie/base.html' %}
+
+{% block title %}
+    мои маршуты
+{% endblock %}
+
+{% block content %}
+<div id="app-7">
+  <div class="col-md-2">
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id"
+      :id="item.id"
+      :class="classObject"
+      :track-data="item.value"
+      >
+    </todo-item>
+  </div>
+</div>
+<div class="col-md-12" id="map"></div>
+
+
+<script type="text/javascript">
+var map;
+var c = 0;
+var multilinestore = [];
+var trackstore = [];
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 49.00, lng: 32.00},
+    zoom: 6
+  })}
+
+var k = null;
+Vue.component('todo-item', {
+  props: ['todo'],
+  template: '<div @click="ttt">[[ todo.text ]]</div>',
+  delimiters: ['[[', ']]'],
+  methods: {
+      ttt: function(){
+
+          multilinestore = JSON.parse(this.todo.value);
+          console.log(multilinestore);
+          var middlelat = 0;
+          var middlelng = 0;
+          //var targetid = +$('selecttrack').attr('id').split('-')[1];
+          if (trackstore.length > 0) {
+              trackstore.pop().setMap(null);
+          }
+          map.setZoom(9);
+          for (var i=0;  i < multilinestore.length; i++) {
+              middlelat += multilinestore[i].lat;
+              middlelng += multilinestore[i].lng;
+          }
+          map.setCenter({lat: middlelat/multilinestore.length, lng: middlelng/multilinestore.length});
+          var myTrack = new google.maps.Polyline({
+                    path: multilinestore,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                  });
+          myTrack.setMap(map);
+          trackstore.push(myTrack)
+
+      }
+  }
+});
+var app7;
+app7 = new Vue({
+    el: '#app-7',
+    data: {
+        groceryList: [
+            {% autoescape on %}
+            {% for elem in tracks %}
+             {text: '{{elem.trackname}}', value: '{{ elem.track|safe}}', id: '{{elem.id}}'},
+             {% endfor %}
+            {% endautoescape %}
+        ],
+        classObject: 'col-md-12 text-center tracklistel'
+    }
+   });
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2b_w5xsmtLBqr5Rpm1o9mGIZclhYo-Tc&callback=initMap" async defer></script>
+{% endblock %}
+

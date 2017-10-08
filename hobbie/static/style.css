@@ -28,4 +28,12 @@ html, body {
     display: none;
 }
 
-
+.coordscont{
+    padding: 10px;
+    background-color: rgba(0, 189, 255, 0.26);
+    text-align: center;
+    font-size: 20px;
+}
+.tracklistel:hover{
+    background-color: deepskyblue;
+}

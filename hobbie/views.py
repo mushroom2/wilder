@@ -4,6 +4,8 @@ from django.views.generic import TemplateView
 from hobbie.models import Card, MyTrack
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django_mako_plus import view_function
+from django.conf import settings
 
 def home(request):
     tasks = Card.objects.all()
@@ -36,4 +38,10 @@ def savetrack(request):
 def gettrack(request):
     user = request.user
     tracks = MyTrack.objects.filter(username=user).order_by("created_date")
-    return render(request, 'hobbie/gettrack.html', {'tracks': tracks})
+    return render(request, 'hobbie/gettrackvue.html', {'tracks': tracks})
+
+
+@view_function
+def tes(request):
+    user = request.user
+    return request.dmp_render

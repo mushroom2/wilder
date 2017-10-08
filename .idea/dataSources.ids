@@ -1803,6 +1803,7 @@
       <column name="track" sqlType="text" precision="2147483647" scale="0" nullable="false" jdbcType="12"/>
       <column name="created_date" sqlType="timestamptz" precision="35" scale="6" nullable="false" jdbcType="93"/>
       <column name="trackname" sqlType="varchar" precision="256" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="text" precision="2147483647" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="hobbie_mytrack_pkey" columns="id"/>
     </table>
     <table name="hobbie_mytrack_id_seq" schema="public" catalog="hobbiedb" type="SEQUENCE">
