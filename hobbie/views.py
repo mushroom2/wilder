@@ -16,7 +16,7 @@ def home(request):
 
 
 def mymap(request):
-    return render(request, 'hobbie/mao.html', {'user': request.user})
+    return render(request, 'hobbie/maovue.html', {'user': request.user})
 
 
 @csrf_exempt

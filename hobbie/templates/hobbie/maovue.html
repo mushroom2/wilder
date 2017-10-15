@@ -1,0 +1,141 @@
+{% extends 'hobbie/base.html' %}
+
+{% block title %}
+    карта
+{% endblock %}
+
+{% block content %}
+    <div id="ttt">
+    <mycomponent>
+
+    </mycomponent>
+    </div>
+    <div class="col-md-12" id="map"></div>
+
+
+    <script>
+
+    // GOOGLE DIRECION API KEY AIzaSyD7biSf5Aa5lUFmoDX2nYu8eGbsuzB1bY8
+    // https://lh3.googleusercontent.com/kSr5aWqIoKYkBTvRVGzjdmbMuUcsRY3lG0JyYCHXWeOPyjfAbzT0sYZUAecrpUbhtNOL13w4m95pE6w=w1920-h922
+    // marker icon url https://drive.google.com/file/d/0B-TBnxQ1BvJtOXItel9PU2FIbWc
+      //$('#makemultiline').bootstrapSwitch();
+
+      var map;
+
+      var c = 0;
+      var multilinestore = [];
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 49.00, lng: 32.00},
+          zoom: 6
+        })}
+
+      function addMarker(){
+
+         var getCoordsOnClick = google.maps.event.addListener(map, "click", function(event) {
+                  var lat = event.latLng.lat();
+                  var lng = event.latLng.lng();
+                  multilinestore.unshift({lat:lat, lng:lng});
+                  c = c + 1;
+                  new google.maps.Marker({
+                       position: {lat: lat, lng: lng},
+                       map: map,
+                       animation: google.maps.Animation.DROP,
+                       title: ''+c
+                    });
+                  if (multilinestore.length > 1) {
+                  var myTrack = new google.maps.Polyline({
+                    path: multilinestore,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                  });
+                  myTrack.setMap(map);
+
+
+                  }
+                 //alert(lat + ' ' + lng)
+              });
+
+      }
+
+
+      Vue.component('mycomponent', {
+          template:'<div :class="classes.cont"><button :style="{display: vis}" @click="mytoggle()">[[ clicked ]]</button>' +
+          '<div :style="{display: crvis}"><div><label for="trackname">Track Name</label><input type="text" id="trackname" v-model="trackname" class="form-control"></div>' +
+
+          '<label for="treckdesc" >Description</label>' +
+              '<textarea id="treckdesc" rows="5" class="form-control" v-model="trackdesc">' +
+          '</textarea>' +
+          '<button @click="onsave()">Save Track</button>' +
+          '</div>' +
+          '</div>',
+
+          delimiters: ['[[', ']]'],
+
+          data: function(){
+              return {
+                  classes : {
+                      cont: 'col-md-2'
+                  },
+                  crvis: 'none',
+                  vis: 'block',
+                  clicked: 0,
+                  trackname : this.trackname,
+                  trackdesc: this.trackdesc
+              }
+          },
+          methods: {
+              mytoggle: function(){
+                  if (this.clicked === 0) {
+                      this.vis = 'none';
+                      this.crvis = 'block';
+                      this.clicked = 1;
+                      addMarker()
+                  } else {
+                      this.clicked = 0;
+                      this.vis = 'block';
+                      this.crvis = 'none'
+                  }
+              },
+              onsave: function(){
+                  console.log(this.trackname, this.trackdesc);
+                  /*
+                  axios.post('{% url 'savetrack' %}', {body: JSON.stringify({"track": multilinestore,
+                      "user": "{{ user }}",
+                      "name": this.trackname,
+                      "description": this.trackdesc}
+                  )}).then(response => {}).catch(e => {
+                      this.errors.push(e);
+                  });*/
+                            $.ajax({
+              url: '{% url 'savetrack' %}',
+              type: 'POST',
+              data: JSON.stringify({"track": multilinestore,
+                      "user": "{{ user }}",
+                      "name": this.trackname,
+                      "description": this.trackdesc}
+                  ),
+              contentType: 'application/json; charset=utf-8',
+              dataType: 'json',
+              success: function(result){console.log(result)},
+              error: function(res){console.log(res)}
+          });
+                  this.trackname = '';
+                  this.trackdesc = '';
+                  c = 0;
+                  multilinestore = [];
+                  google.maps.event.clearListeners(map, 'click');
+
+                  this.mytoggle()
+              }
+          }
+      });
+      new Vue({
+          el: '#ttt'
+      })
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2b_w5xsmtLBqr5Rpm1o9mGIZclhYo-Tc&callback=initMap" async defer></script>
+{% endblock %}
+
