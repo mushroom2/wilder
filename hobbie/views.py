@@ -23,6 +23,7 @@ def savetrack(request):
     #if request.is_ajax():
     if request.method == 'POST':
        #print(json.loads(request.body.decode('utf-8')))
+        print(request.body)
         trackdata = json.loads(request.body.decode('utf-8'))
         mt = MyTrack()
         mt.username = trackdata['user']
